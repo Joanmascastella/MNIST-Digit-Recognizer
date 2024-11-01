@@ -1,45 +1,63 @@
-import torch.nn as nn
+from sklearn.model_selection import RandomizedSearchCV
 from sklearn.svm import SVC
-from helpful_functions import initialize_weights
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 import xgboost as xgb
 
-# class DNNClassifier(nn.Module):
-#     def __init__(self, input_size, hidden_size, num_classes):
-#         super(DNNClassifier, self).__init__()
-#         self.fc1 = nn.Linear(input_size, hidden_size)
-#         self.relu = nn.ReLU()
-#         self.fc2 = nn.Linear(hidden_size, num_classes)
-#
-#         # Apply weights initialization
-#         self.apply(initialize_weights)
-#
-#     def forward(self, x):
-#         x = self.fc1(x)
-#         x = self.relu(x)
-#         x = self.fc2(x)
-#         return x
-#
-
-
+# SVM with RandomizedSearchCV
 def svm_classifier():
-    svm_classifier = SVC(kernel='linear', C=1)
-    return svm_classifier
+    svm = SVC()
+    params = {
+        'C': [0.1, 1, 10],
+        'kernel': ['linear', 'rbf'],
+        'gamma': ['scale', 'auto']
+    }
 
+    tuned_svm = RandomizedSearchCV(svm, param_distributions=params, n_iter=5, scoring='accuracy', cv=4, random_state=42, n_jobs=-1)
+    return tuned_svm
+
+# Random Forest with RandomizedSearchCV
 def rf_classifier():
-    rf_classifier = RandomForestClassifier(n_estimators=100)
-    return rf_classifier
+    rf = RandomForestClassifier(random_state=42)
+    params = {
+        'n_estimators': [50, 100, 150],
+        'max_depth': [5, 10, 15],
+        'min_samples_split': [2, 5],
+    }
+    tuned_rf = RandomizedSearchCV(rf, param_distributions=params, n_iter=5, scoring='accuracy', cv=4, random_state=42, n_jobs=-1)
+    return tuned_rf
 
+# XGBoost with RandomizedSearchCV
 def gradient_boosting_classifier():
-    xgb_classifier = xgb.XGBClassifier(n_estimators=100, use_label_encoder=False)
-    return xgb_classifier
+    xgb_classifier = xgb.XGBClassifier(use_label_encoder=False, eval_metric='mlogloss', random_state=42)
+    params = {
+        'n_estimators': [50, 100],
+        'max_depth': [3, 5],
+        'learning_rate': [0.1, 0.01],
+        'subsample': [0.8, 1.0],
+    }
+    tuned_xgb = RandomizedSearchCV(xgb_classifier, param_distributions=params, n_iter=5, scoring='accuracy', cv=4, random_state=42, n_jobs=-1)
+    return tuned_xgb
 
+# k-NN with RandomizedSearchCV
 def knn_classifier():
-    knn_classifier = KNeighborsClassifier(n_neighbors=3)
-    return knn_classifier
+    knn = KNeighborsClassifier()
+    params = {
+        'n_neighbors': [3, 5, 7],
+        'weights': ['uniform', 'distance'],
+        'metric': ['euclidean', 'manhattan'],
+    }
+    tuned_knn = RandomizedSearchCV(knn, param_distributions=params, n_iter=5, scoring='accuracy', cv=4, random_state=42, n_jobs=-1)
+    return tuned_knn
 
+# MLP with RandomizedSearchCV
 def mlp_classifier():
-    mlp_classifier = MLPClassifier(hidden_layer_sizes=(128, 64), max_iter=500)
-    return mlp_classifier
+    mlp = MLPClassifier(max_iter=200, random_state=42)
+    params = {
+        'hidden_layer_sizes': [(64,), (64, 32)],
+        'alpha': [0.0001, 0.001],
+        'learning_rate_init': [0.001, 0.01],
+    }
+    tuned_mlp = RandomizedSearchCV(mlp, param_distributions=params, n_iter=5, scoring='accuracy', cv=4, random_state=42, n_jobs=-1)
+    return tuned_mlp
