@@ -3,6 +3,7 @@ import torch
 
 # Importing Classes
 from helpful_functions import get_device
+from data_processing import preprocessing_data, data_augmentation
 
 
 def main():
@@ -17,12 +18,13 @@ def main():
 
     # Processing Data
     print("Step 1. Processing Data")
+    train_processed, test_processed = preprocessing_data(train_file, test_file)
 
 
 
     # Autoencoder
     print("Step 2. Loading And Running Autoencoder")
-
+    train_dataset, test_dataset = data_augmentation(train_processed, test_processed)
 
     # Classifier
     print("Step 3. Loading Classifier & Training & Validating")
