@@ -1,5 +1,6 @@
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
@@ -8,13 +9,17 @@ import xgboost as xgb
 # SVM with RandomizedSearchCV
 def svm_classifier():
     svm = SVC()
+
     params = {
-        'C': [0.1, 1, 10],
-        'kernel': ['linear', 'rbf'],
-        'gamma': ['scale', 'auto']
+        'C': [0.01, 0.1, 1, 10, 100],
+        'kernel': ['linear', 'rbf', 'poly', 'sigmoid'],
+        'gamma': ['scale', 'auto', 0.001, 0.01, 0.1, 1],
+        'degree': [2, 3, 4],
+        'coef0': [0.0, 0.5, 1.0]
     }
 
-    tuned_svm = RandomizedSearchCV(svm, param_distributions=params, n_iter=5, scoring='accuracy', cv=4, random_state=42, n_jobs=-1)
+    tuned_svm = GridSearchCV(svm, param_grid=params, scoring='accuracy', cv=5, n_jobs=-1, verbose=2)
+
     return tuned_svm
 
 # Random Forest with RandomizedSearchCV
