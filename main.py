@@ -9,7 +9,6 @@ from data_processing import preprocessing_data, data_augmentation
 from autoencoder import Autoencoder
 
 
-
 def main():
 
     # Defining Data Paths
@@ -30,12 +29,12 @@ def main():
     input_size = 28 * 28
     encoded_size = 64
     num_epochs = 120
-    learning_rate = 0.001
+    learning_rate = 0.00001
 
     autoencoder = Autoencoder(input_size, encoded_size).to(device)
-    criterion = nn.MSELoss()
+    criterion = nn.BCELoss()
     optimizer = torch.optim.Adam(autoencoder.parameters(), lr=learning_rate)
-    train_features, test_features = autoencoder_train(train_loader, test_loader, autoencoder, learning_rate, num_epochs, criterion, optimizer)
+    train_features, test_features = autoencoder_train(train_loader, test_loader, autoencoder, num_epochs, criterion, optimizer, input_size)
 
 
     # Classifier
