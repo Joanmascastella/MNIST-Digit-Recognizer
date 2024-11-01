@@ -1,8 +1,8 @@
 import pandas as pd
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
-
+from mnist_dataset import MNISTDataset
 
 def preprocessing_data(train_file, test_file):
     # Load Data
@@ -20,30 +20,6 @@ def preprocessing_data(train_file, test_file):
     test = torch.tensor(test_X.values, dtype=torch.float32).reshape(-1, 1, 28, 28)
 
     return X, y, test
-
-
-class MNISTDataset(Dataset):
-    def __init__(self, data, labels=None, transform=None):
-        self.data = data
-        self.labels = labels
-        self.transform = transform
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, idx):
-        image = self.data[idx]
-
-        # Apply transformations
-        if self.transform:
-            image = self.transform(image)
-
-        if self.labels is not None:
-            label = self.labels[idx]
-            return image, label
-        else:
-            return image
-
 
 def data_augmentation(train_data, y_data, test_data):
     # Define augmentation and preprocessing pipelines
