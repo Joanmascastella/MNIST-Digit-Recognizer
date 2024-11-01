@@ -1,22 +1,28 @@
 import torch.nn as nn
 from sklearn.svm import SVC
+from helpful_functions import initialize_weights
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 import xgboost as xgb
 
-class DNNClassifier(nn.Module):
-    def __init__(self, input_size, hidden_size, num_classes):
-        super(DNNClassifier, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
-        self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, num_classes)
+# class DNNClassifier(nn.Module):
+#     def __init__(self, input_size, hidden_size, num_classes):
+#         super(DNNClassifier, self).__init__()
+#         self.fc1 = nn.Linear(input_size, hidden_size)
+#         self.relu = nn.ReLU()
+#         self.fc2 = nn.Linear(hidden_size, num_classes)
+#
+#         # Apply weights initialization
+#         self.apply(initialize_weights)
+#
+#     def forward(self, x):
+#         x = self.fc1(x)
+#         x = self.relu(x)
+#         x = self.fc2(x)
+#         return x
+#
 
-    def forward(self, x):
-        x = self.fc1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
-        return x
 
 def svm_classifier():
     svm_classifier = SVC(kernel='linear', C=1)

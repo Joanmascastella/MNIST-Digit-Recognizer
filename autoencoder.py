@@ -1,5 +1,5 @@
 import torch.nn as nn
-import torch.nn.init as init
+from helpful_functions import initialize_weights
 
 # Define the Autoencoder
 class Autoencoder(nn.Module):
@@ -16,16 +16,14 @@ class Autoencoder(nn.Module):
             nn.Linear(encoded_size, 128),
             nn.ReLU(),
             nn.Linear(128, input_size),
-            nn.Sigmoid()
+            nn.Sigmoid()  # to scale output to [0, 1]
         )
+
+        # Apply weights initialization
+        self.apply(initialize_weights)
 
     def forward(self, x):
         encoded = self.encoder(x)
         decoded = self.decoder(encoded)
         return encoded, decoded
 
-def initialize_weights(m):
-    if isinstance(m, nn.Linear):
-        init.xavier_uniform_(m.weight)
-        if m.bias is not None:
-            init.constant_(m.bias, 0)
