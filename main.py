@@ -18,13 +18,13 @@ def main():
 
     # Processing Data
     print("Step 1. Processing Data")
-    train_processed, test_processed = preprocessing_data(train_file, test_file)
+    train_processed, y_processed, test_processed = preprocessing_data(train_file, test_file)
 
 
 
     # Autoencoder
     print("Step 2. Loading And Running Autoencoder")
-    train_dataset, test_dataset = data_augmentation(train_processed, test_processed)
+    train_dataset, test_dataset = data_augmentation(train_processed, y_processed, test_processed)
 
     # Classifier
     print("Step 3. Loading Classifier & Training & Validating")
